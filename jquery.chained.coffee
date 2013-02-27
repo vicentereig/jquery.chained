@@ -9,13 +9,18 @@ class Link
   reset: =>
     @$el.attr('disabled', true)
     @$el.html("<option>Loading...</option>")
-    $.getJSON  @remoteLoaderUrl(), @populate if @remoteLoaderUrl()?
-    @$el.attr('disabled', false)
+    if @remoteLoaderUrl()?
+      $.getJSON  @remoteLoaderUrl(), @populate
+      @$el.attr('disabled', false)
+    else
+      @$el.html "<option>All</option>"
+      @$el.select2()
+
     false
 
   populate: (cities) =>
     @$el.html ("<option value='#{city.id}'>#{city.name}</option>" for city in cities)
-    @$el.select2() # refactor dependency
+    @$el.select2()
 
 class Chain
   constructor: (@$el, $parent, options) ->
